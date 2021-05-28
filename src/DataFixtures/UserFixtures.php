@@ -2,7 +2,10 @@
 
 namespace App\DataFixtures;
 
+use Faker\Factory;
+use App\Entity\Post;
 use App\Entity\User;
+use DateTime;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
@@ -31,6 +34,36 @@ class UserFixtures extends Fixture
             ->setRoles(['ROLE_ADMIN']);
 
         $manager->persist($user);  
+        $manager->flush();
+
+        $faker = Factory::create('fr_FR');
+        $users = [];
+        for($i = 0;$i < 25;$i++){
+            $newUser = new User();
+            $newUser
+                ->setFirstname($faker->firstName())
+                ->setLastname($faker->lastName())
+                ->setEmail($faker->email())
+                ->setBirthAt(new \DateTime())
+                ->setPassword($this->passwordEncoder->encodePassword(
+                    $newUser,
+                    'azerty'))
+                ->setIsValidate(true)
+                ->setRoles(['ROLE_USER']);
+
+            $manager->persist($newUser);
+            $users[] = $newUser;
+        }
+        $manager->flush();
+
+        for($i = 0;$i < 100;$i++){
+            $newPost = new Post();
+            $newPost
+                ->setContent($faker->realText())
+                ->setPublishedAt(new \DateTime())
+                ->setUser($faker->randomElement($users));
+            $manager->persist($newPost);
+        }
         $manager->flush();
     }
 }
