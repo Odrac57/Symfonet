@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Comment;
 use Faker\Factory;
 use App\Entity\Post;
 use App\Entity\User;
@@ -55,7 +56,8 @@ class UserFixtures extends Fixture
             $users[] = $newUser;
         }
         $manager->flush();
-
+        
+        $tab_post = [];
         for($i = 0;$i < 100;$i++){
             $newPost = new Post();
             $newPost
@@ -63,6 +65,19 @@ class UserFixtures extends Fixture
                 ->setPublishedAt(new \DateTime())
                 ->setUser($faker->randomElement($users));
             $manager->persist($newPost);
+            $tab_post[] = $newPost;
+        }
+        $manager->flush();
+
+        //création de commentaires aléatoires
+        for($i = 0;$i < 50;$i++){
+            $newCom = new Comment();
+            $newCom
+                ->setContent($faker->realText())
+                ->setAuthor($faker->randomElement($users))
+                ->setCreatedAt(new \DateTime())
+                ->setConcern($faker->randomElement($tab_post));
+            $manager->persist($newCom);
         }
         $manager->flush();
     }

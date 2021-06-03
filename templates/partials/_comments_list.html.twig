@@ -1,0 +1,12 @@
+{% for com in post.comments %}
+  <div class="card">
+    <strong>{{ com.author.firstname}}
+      {{ com.author.lastname }}</strong>
+    <small>{{ com.createdAt|date('d/m/Y') }}</small>
+    <small>
+      <i>
+        <u>{{ com.content }}</i>
+      </u>
+    </small>
+  </div>
+{% endfor %}

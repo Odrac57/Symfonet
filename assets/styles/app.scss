@@ -1,0 +1,9 @@
+$colorMainText: #222;
+
+//importer du css qui vient d'un node_modules
+@import '~bootstrap/scss/bootstrap';
+
+body {
+    background-color: lightgray;
+    color: $colorMainText;
+}
